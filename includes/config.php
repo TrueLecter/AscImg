@@ -1,4 +1,3 @@
 <?
 	$uploads = 'uploads/';
- mkdir("./../".$uploads);
 ?>
