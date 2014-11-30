@@ -17,6 +17,7 @@ function gallery() {
 		$("#aLink").removeClass("active");
 		$("#bLink").addClass("active");
 		$("#publish").hide();
+		$("#table").show();
 		$("#gallery").fadeIn(200);
 		selected = 1;
 	}
