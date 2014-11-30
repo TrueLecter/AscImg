@@ -16,7 +16,7 @@
 		<link href="css/fui/css/vendor/bootstrap.min.css" rel="stylesheet">
 		<link href="css/fui/css/flat-ui.css" rel="stylesheet">
 		<link href="css/spinner.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="css/tooltip.css">
+		<link href="css/table.css" rel="stylesheet">
 		<script src="js/jquery.min.js"></script>
 		<script src="js/formHandler.js"></script>
 		<script src="js/pageUtils.js"></script>
@@ -53,7 +53,10 @@
 				document.getElementById("checkbox2").checked = false;
 				document.getElementById("checkbox1").checked = false;
 				document.getElementById("checkbox3").checked = false;
-				document.getElementById("checkbox4").checked = false;	
+				document.getElementById("checkbox4").checked = false;
+				sendRequest();
+				<? if ($selected == 1){
+					echo "gallery();";} ?>	
 				$('#picker').colpick({
 	layout:'hex',
 	submit:0,
@@ -156,6 +159,31 @@
 			</center>
 		</div>
 		<div id="gallery">
+			<div id="spinnerGallery" style = "padding-top: 0.5%; position: relative; left: 50%; margin-left: -25px; width: 100px;">
+						<div class="windows8">
+							<div class="wBall" id="wBall_1">
+								<div class="wInnerBall">
+								</div>
+							</div>
+							<div class="wBall" id="wBall_2">
+								<div class="wInnerBall">
+								</div>
+							</div>
+							<div class="wBall" id="wBall_3">
+								<div class="wInnerBall">
+								</div>
+							</div>
+							<div class="wBall" id="wBall_4">
+								<div class="wInnerBall">
+								</div>
+							</div>
+							<div class="wBall" id="wBall_5">
+								<div class="wInnerBall">
+								</div>
+							</div>
+						</div>
+					</div>
+			<div id="table"></div>
 		</div>
 		<?php include "includes/footer.php"; ?>
 	</body>

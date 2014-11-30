@@ -22,6 +22,34 @@ function randomChar() {
 	return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 1);
 }
 
+function getResizedImage($width, $height, $filename){
+	list($width_orig, $height_orig, $type) = getimagesize($filename);
+	if ($width_orig > $width || $height_orig > $height) {
+		$scale = min($width / $width_orig, $height / $height_orig);
+		$width = ceil($scale * $width_orig);
+		$height = ceil($scale * $height_orig);
+	} else {
+		$height = $height_orig;
+		$width = $width_orig;
+	}
+	if ($type == 1) {
+		$image = imagecreatefromgif($filename);
+	} else if ($type == 2) {
+		$image = imagecreatefromjpeg($filename);
+	} else if ($type == 3) {
+		$image = imagecreatefrompng($filename);
+	} else {
+		$image = imagecreatetruecolor($width, $height);
+	}
+	$image_r = imagecreatetruecolor($width, $height);
+	imagealphablending($image_r, false);
+ 	imagesavealpha($image_r,true);
+ 	$transparent = imagecolorallocatealpha($image_r, 255, 255, 255, 127);
+ 	imagefilledrectangle($image_r, 0, 0, $width, $height, $transparent);
+	imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+	return $image_r;
+}
+
 if (isset($_GET["id"])) {
 	$q = "select * from " . $table . " where id='" . mysqli_escape_string($link, $_GET["id"]) . "' AND procced=' '";
 	$res = mysqli_query($link, $q);
@@ -50,38 +78,17 @@ if (isset($_GET["id"])) {
 				$width = (intval($_GET["width"]) < 150) ? $_GET["width"] : 150;
 			} 
 			if(isset($_GET["height"])){
-				$width = (intval($_GET["height"]) < 150) ? $_GET["height"] : 150;
+				$height = (intval($_GET["height"]) < 150) ? $_GET["height"] : 150;
 			} 
 		}
 		if (isset($_GET["customBackgroud"])){
 			$background = "#" . $_GET["customBackgroud"];
 		}
 	}
-	list($width_orig, $height_orig, $type) = getimagesize($filename);
-	if ($width_orig > $width || $height_orig > $height) {
-		$scale = min($width / $width_orig, $height / $height_orig);
-		$width = ceil($scale * $width_orig);
-		$height = ceil($scale * $height_orig);
-	} else {
-		$height = $height_orig;
-		$width = $width_orig;
-	}
-	if ($type == 1) {
-		$image = imagecreatefromgif($filename);
-	} else if ($type == 2) {
-		$image = imagecreatefromjpeg($filename);
-	} else if ($type == 3) {
-		$image = imagecreatefrompng($filename);
-	} else {
-		$image = imagecreatetruecolor($width, $height);
-	}
-	$image_p = imagecreatetruecolor($width, $height);
-	imagealphablending($image_p, false);
- 	imagesavealpha($image_p,true);
- 	$transparent = imagecolorallocatealpha($image_p, 255, 255, 255, 127);
- 	imagefilledrectangle($image_p, 0, 0, $width, $height, $transparent);
-	imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-	fwrite($myfile, "<html><head><title>ASCII art</title></head><body style=\"background-color:".$background.";\"><pre style=\"font: 10px/6px monospace; text-align: center;\">");
+	$image_p = getResizedImage($width, $height, $filename);
+	$image_compress = getResizedImage(150, 150, $filename);
+
+ 	fwrite($myfile, "<html><head><title>ASCII art</title></head><body style=\"background-color:".$background.";\"><pre style=\"font: 10px/6px monospace; text-align: center;\">");
 	for ($i = 0; $i < $height; $i++) {
 		$txt = "";
 		for ($j = 0; $j < $width; $j++) {
@@ -98,11 +105,12 @@ if (isset($_GET["id"])) {
 		}
 		fwrite($myfile, $txt . "\n");
 	}
+	imagepng($image_compress, $filename.".c.png", 7);
 	$q = "UPDATE ".$table." SET procced = 'yes' WHERE id ='". mysqli_escape_string($link, $_GET["id"])."'";
 	mysqli_query($link, $q);
 	fwrite($myfile, "</pre></body></head>");
 	fclose($myfile);
-	echo json_encode(array("art" => "index.php?id=" . $_GET["id"], "error" => 0));
+	echo json_encode(array("id" => $_GET["id"], "error" => 0));
 } else {
 	echo json_encode(array("error" => 5, "errorDesc" => "Empty request!"));
 }

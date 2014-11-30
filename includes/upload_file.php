@@ -13,7 +13,7 @@ if (isset($_GET['files'])) {
 		$fileName = $uploaddir . $fName;
 		$info = explode('.', strtolower(basename($file['name'])));
 		if (in_array(end($info), $allow)) {
-			if (mkdir($uploaddir . $time . "/") && move_uploaded_file($file['tmp_name'], $fileName)) {
+			if (mkdir($uploaddir . $time . "/", 0777 ,true) && move_uploaded_file($file['tmp_name'], $fileName)) {
 				$q = "INSERT INTO " . $table . " (`key`, `path`, `timestamp`, `private`, `procced`) VALUES ('" . md5($time) . "', '" . mysqli_escape_string($link,$uploads) . mysqli_escape_string($link,$fName) . "', '" . $time . "', ' ', ' ')";
 				if (!mysqli_query($link, $q)) {
 					$data = array("error" => 1, "url" => "", "errorDesc" => "Internal server error.");

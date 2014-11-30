@@ -1,0 +1,56 @@
+.wrapper {
+    margin: 0 auto;
+    padding: 40px;
+}
+.table {
+    width: 100%;
+    display: table;
+    margin: 0 0 40px;
+}
+.row {
+    display: table-row;
+}
+.row.header {
+    font-weight: 900;
+    color: #fff;
+    background: #2980b9;
+    border-top-left-radius: 10px!important;
+    border-top-right-radius: 10px!important;
+}
+.cell {
+    display: table-cell;
+    padding: 6px 12px;
+}
+@media screen and max-width 580px {
+    .table {
+        display: block;
+}
+.row {
+    display: block;
+    padding: 8px 0;
+}
+.cell {
+    display: block;
+    padding: 2px 12px;
+}
+}
+#table {
+    margin: 0 auto;
+}
+#table img {
+    margin: 25px;
+    opacity: 0.8;
+    border: 5px solid #C2C2C2;
+    border-radius: 5px;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(.7, transparent), to(rgba(0, 0, 0, 0.1)));
+}
+#table img:hover {
+    opacity: 1;
+    -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(.7, transparent), to(rgba(0, 0, 0, 0.4)));
+    -webkit-box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.8);
+    -moz-box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.8);
+    box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.8);
+}

@@ -105,9 +105,10 @@ function returnArt(id) {
 				$("#statusCaption").animate({
 					color: 'green'
 				}, 500);
-				window.open(data.art, 'mywindow', 'resizable=no, toolbar=no, scrollbars=yes location=no, directories=no, menubar = no');
+				openArt(data.id);
 				enableForm();
 				disableSpinner();
+				sendRequest();
 			} else {
 				console.log('ERRORS: ' + data.error);
 				$("#statusCaption").html("Error generating art image!</br>" + data.errorDesc);
@@ -130,6 +131,10 @@ function returnArt(id) {
 			enableForm();
 		}
 	});
+}
+
+function openArt(art){
+	window.open("index.php?id="+art, 'mywindow', 'resizable=no, toolbar=no, scrollbars=yes location=no, directories=no, menubar = no');
 }
 
 function toggleEnabled(elem) {
