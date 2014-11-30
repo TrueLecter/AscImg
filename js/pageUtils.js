@@ -65,7 +65,9 @@ function processResponce(result) {
 	debug = result;
 	$("#spinnerGallery").hide();
 	$('#table').html(processsTable(result.table) + processsPaging(result.pagination));
-	$('#table').fadeIn(200);
+	if (firstLoad != 0) {
+		$('#table').fadeIn(200);
+	}
 	$("img").hover(function() {
 		Pixastic.process($(this).get(0), "glow", {
 			amount: 0.5,

@@ -1,4 +1,5 @@
 var files = undefined;
+var firstLoad = 0;
 
 function prepareUpload(target) {
 	files = target.files;

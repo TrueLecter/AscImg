@@ -54,9 +54,11 @@
 				document.getElementById("checkbox1").checked = false;
 				document.getElementById("checkbox3").checked = false;
 				document.getElementById("checkbox4").checked = false;
-				sendRequest();
 				<? if ($selected == 1){
-					echo "gallery();";} ?>	
+					echo "gallery();
+					firstLoad = 1;	
+					";} ?>
+				sendRequest();
 				$('#picker').colpick({
 	layout:'hex',
 	submit:0,
