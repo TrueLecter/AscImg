@@ -22,7 +22,9 @@ function randomChar() {
 	return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 1);
 }
 
-function getResizedImage($width, $height, $filename){
+function getResizedImage($widthS, $heightS, $filename){
+	$width = $widthS;
+	$height = $heightS;
 	list($width_orig, $height_orig, $type) = getimagesize($filename);
 	if ($width_orig > $width || $height_orig > $height) {
 		$scale = min($width / $width_orig, $height / $height_orig);
@@ -47,7 +49,8 @@ function getResizedImage($width, $height, $filename){
  	$transparent = imagecolorallocatealpha($image_r, 255, 255, 255, 127);
  	imagefilledrectangle($image_r, 0, 0, $width, $height, $transparent);
 	imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-	return $image_r;
+	$res = array("img" => $image_r, "w" => $width, "h" => $height);
+	return $res;
 }
 
 if (isset($_GET["id"])) {
@@ -86,8 +89,11 @@ if (isset($_GET["id"])) {
 		}
 	}
 	$image_p = getResizedImage($width, $height, $filename);
+	$width = $image_p["w"];
+	$height = $image_p["h"];
+	$image_p = $image_p["img"];
 	$image_compress = getResizedImage(150, 150, $filename);
-
+ $image_compress = $image_compress["img"];
  	fwrite($myfile, "<html><head><title>ASCII art</title></head><body style=\"background-color:".$background.";\"><pre style=\"font: 10px/6px monospace; text-align: center;\">");
 	for ($i = 0; $i < $height; $i++) {
 		$txt = "";
