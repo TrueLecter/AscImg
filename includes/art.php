@@ -54,18 +54,20 @@ function getResizedImage($widthS, $heightS, $filename){
 }
 
 if (isset($_GET["id"])) {
-	$q = "select * from " . $table . " where id='" . mysqli_escape_string($link, $_GET["id"]) . "' AND procced=' '";
-	$res = mysqli_query($link, $q);
+	$q = "select * from " . $table . " where id = ? AND procced=' '";
+	$STMT = $link->prepare($q);
+	$STMT->execute(array($_GET["id"]));
+	$res = $STMT->fetch();
 	if (!$res) {
 		$errorWithID = json_encode(array("errorDesc" => "Invalid id!", "error" => 1));
 		die($errorWithID);
 	}
 	if (isset($_GET["private"])){
-		$q = "UPDATE ".$table." SET private = 'yes' WHERE id ='". mysqli_escape_string($link, $_GET["id"])."'";
-		mysqli_query($link, $q);
+		$q = "UPDATE ".$table." SET private = 'yes' WHERE id = ?";
+		$STMT = $link->prepare($q);
+		$STMT->execute(array($_GET["id"]));
 	}
-	$row = mysqli_fetch_array($res);
-	if ($row["procced"] === "yes"){
+	if ($res["procced"] === "yes"){
 		echo json_encode(array("art" => "index.php?id=" . $_GET["id"], "error" => 0));
 	}
 	$filename = "./../" . $row['path'];
@@ -112,8 +114,10 @@ if (isset($_GET["id"])) {
 		fwrite($myfile, $txt . "\n");
 	}
 	imagepng($image_compress, $filename.".c.png", 7);
-	$q = "UPDATE ".$table." SET procced = 'yes' WHERE id ='". mysqli_escape_string($link, $_GET["id"])."'";
-	mysqli_query($link, $q);
+	$q = "UPDATE ".$table." SET procced = 'yes' WHERE id = ?";
+	$STMT = $link->prepare($q);
+	$STMT->execute(array($_GET["id"]));
+	
 	fwrite($myfile, "</pre></body></head>");
 	fclose($myfile);
 	echo json_encode(array("id" => $_GET["id"], "error" => 0));

@@ -9,16 +9,18 @@
 		$page = intval($_GET["page"]);
 	}
 
-	$res = mysqli_query($link, "SELECT * FROM `" . $table . "` WHERE private=' ' ORDER BY id DESC LIMIT " . ($limit * $perPage) . "," . (($limit + 1) * $perPage));
-	$q = mysqli_query($link, "SELECT COUNT(*) as num FROM `" . $table . "` WHERE private=' ' ORDER BY id DESC");
-	
-	$count = mysqli_fetch_array($q);
+	$STMT = $link->prepare("SELECT * FROM `" . $table . "` WHERE private=' ' ORDER BY id DESC LIMIT " . ($limit * $perPage) . "," . (($limit + 1) * $perPage));
+	$STMT->execute();
+	$CSTMT = $link->prepare("SELECT COUNT(*) as num FROM `" . $table . "` WHERE private=' ' ORDER BY id DESC");
+	$CSTMT->execute();
+
+	$count = $CSTMT->fetch();
 	$count = $count['num'];
 	//table
 	$table = array();
 	$i = 0;
-	while ($i < $perPage && $row = mysqli_fetch_array($res)) {
-		$table[] = array('id' => strip_tags($row["id"]), 'image' => $row["path"].".c.png", 'date' => strip_tags($row["timestamp"]));
+	while ($i < $perPage && $row = $STMT->fetch()) {
+			$table[] = array('id' => strip_tags($row["id"]), 'image' => $row["path"].".c.png", 'date' => strip_tags($row["timestamp"]));
 		$i = $i + 1;
 	}
 	if ($i == 0) {
